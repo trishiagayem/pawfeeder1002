@@ -2,17 +2,27 @@ import { initializeApp } from 'firebase/app';
 import { getAuth } from 'firebase/auth';
 import { getFirestore } from 'firebase/firestore';
 
-// 1. Import the Firebase configuration provided by the user
-import firebaseConfig from '../firebase-applet-config.json';
+// ✅ FIX: Use ENV instead of JSON file
+const firebaseConfig = {
+  apiKey: import.meta.env.VITE_FIREBASE_API_KEY,
+  authDomain: import.meta.env.VITE_FIREBASE_AUTH_DOMAIN,
+  projectId: import.meta.env.VITE_FIREBASE_PROJECT_ID,
+  storageBucket: import.meta.env.VITE_FIREBASE_STORAGE_BUCKET,
+  messagingSenderId: import.meta.env.VITE_FIREBASE_MESSAGING_SENDER_ID,
+  appId: import.meta.env.VITE_FIREBASE_APP_ID,
+};
 
-// 2. Initialize the Firebase application
+// Initialize Firebase
 const app = initializeApp(firebaseConfig);
 
-// 3. Initialize Firebase Authentication
+// Auth
 export const auth = getAuth(app);
 
-// 4. Initialize Firestore Database (using the default database ID)
-export const db = getFirestore(app, firebaseConfig.firestoreDatabaseId || '(default)');
+// ✅ FIX: remove firestoreDatabaseId (not needed)
+export const db = getFirestore(app);
+
+
+// ===================== YOUR ORIGINAL CODE (UNCHANGED) =====================
 
 export enum OperationType {
   CREATE = 'create',
