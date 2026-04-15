@@ -12,40 +12,41 @@ const PORT = process.env.PORT || 3000;
 
 app.use(express.json());
 
-/* ================= FIREBASE INIT (FIXED FOR RAILWAY) ================= */
+/* ================= FIREBASE INIT (FIXED + SAFE) ================= */
 
-let db: admin.firestore.Firestore;
+let db: admin.firestore.Firestore | null = null;
 
 try {
-  // Railway / production way (RECOMMENDED)
   if (process.env.FIREBASE_SERVICE_ACCOUNT) {
     const serviceAccount = JSON.parse(
       process.env.FIREBASE_SERVICE_ACCOUNT
     );
 
-    admin.initializeApp({
-      credential: admin.credential.cert(serviceAccount),
-    });
+    if (!admin.apps.length) {
+      admin.initializeApp({
+        credential: admin.credential.cert(serviceAccount),
+      });
+    }
 
     console.log("Firebase initialized using ENV credentials");
   } else {
-    // Local dev fallback
-    admin.initializeApp({
-      credential: admin.credential.applicationDefault(),
-    });
-
-    console.log("Firebase initialized using default credentials");
+    console.log("❌ FIREBASE_SERVICE_ACCOUNT missing");
   }
 
   db = admin.firestore();
+
 } catch (error) {
   console.error("Firebase initialization failed:", error);
+  db = null;
 }
 
-/* ================= DISPENSE API (SIM7600 ENDPOINT) ================= */
+/* ================= DISPENSE API ================= */
 
 app.post("/api/dispense", async (req, res) => {
+  console.log("🔥 DISPENSE HIT:", req.body);
+
   if (!db) {
+    console.log("❌ DB NOT READY");
     return res.status(500).json({ error: "Firebase not initialized" });
   }
 
@@ -59,7 +60,9 @@ app.post("/api/dispense", async (req, res) => {
     const logId = Math.random().toString(36).substring(7);
     const timestamp = admin.firestore.FieldValue.serverTimestamp();
 
-    // 1. Save log
+    console.log("➡ Writing to Firestore...");
+
+    /* ================= 1. SAVE LOG ================= */
     await db.collection("logs").doc(logId).set({
       location,
       type,
@@ -68,7 +71,9 @@ app.post("/api/dispense", async (req, res) => {
       timestamp,
     });
 
-    // 2. Update station
+    console.log("✅ Log saved");
+
+    /* ================= 2. UPDATE STATION ================= */
     const stationRef = db.collection("stations").doc(location);
     const stationDoc = await stationRef.get();
 
@@ -110,14 +115,17 @@ app.post("/api/dispense", async (req, res) => {
 
     await stationRef.set(updateData, { merge: true });
 
-    res.status(201).json({ success: true, id: logId });
+    console.log("✅ Station updated");
+
+    return res.status(201).json({ success: true, id: logId });
+
   } catch (error) {
-    console.error("Dispense error:", error);
-    res.status(500).json({ error: "Internal server error" });
+    console.error("❌ DISPENSE ERROR:", error);
+    return res.status(500).json({ error: "Internal server error" });
   }
 });
 
-/* ================= VITE / FRONTEND ================= */
+/* ================= FRONTEND ================= */
 
 if (process.env.NODE_ENV !== "production") {
   const vite = await createViteServer({
@@ -136,7 +144,7 @@ if (process.env.NODE_ENV !== "production") {
   });
 }
 
-/* ================= START SERVER ================= */
+/* ================= START ================= */
 
 app.listen(PORT, "0.0.0.0", () => {
   console.log(`Server running on http://localhost:${PORT}`);
