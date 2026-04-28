@@ -1265,7 +1265,7 @@ function AppContent() {
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
             <StatCard 
               title="Total Revenue" 
-              value={`₱${stats.totalCoins.toFixed(2)}`} 
+             value={`₲${(Number(stats?.totalCoins ?? 0)).toFixed(2)}`} 
               subValue={`${stats.totalCoins} coins inserted`}
               icon={<Coins className="text-amber-500 w-6 h-6" />}
               color="amber"
@@ -1360,12 +1360,12 @@ function AppContent() {
                   <div className="px-6 py-4 bg-black/5 dark:bg-white/5 rounded-2xl">
                     <p className="text-[10px] font-bold text-[#7F8C8D] uppercase tracking-widest mb-1">Latitude (DMS)</p>
                     <p className="font-mono font-bold text-sm">{toDMS(selectedLocation.lat, true)}</p>
-                    <p className="text-[10px] text-[#7F8C8D] mt-1 opacity-50">{selectedLocation.lat.toFixed(6)}°</p>
+                    <p className="text-[10px] text-[#7F8C8D] mt-1 opacity-50">{(Number(selectedLocation?.lat ?? 0)).toFixed(6)}°</p>
                   </div>
                   <div className="px-6 py-4 bg-black/5 dark:bg-white/5 rounded-2xl">
                     <p className="text-[10px] font-bold text-[#7F8C8D] uppercase tracking-widest mb-1">Longitude (DMS)</p>
                     <p className="font-mono font-bold text-sm">{toDMS(selectedLocation.lng, false)}</p>
-                    <p className="text-[10px] text-[#7F8C8D] mt-1 opacity-50">{selectedLocation.lng.toFixed(6)}°</p>
+                    <p className="text-[10px] text-[#7F8C8D] mt-1 opacity-50">{(Number(selectedLocation?.lng ?? 0)).toFixed(6)}°</p>
                   </div>
                 </div>
               </div>
@@ -1742,7 +1742,7 @@ function AppContent() {
                             </div>
                             <div className="flex justify-between items-center">
                               <span className="text-[10px] text-[#7F8C8D]">Revenue</span>
-                              <span className="text-lg font-black text-[#6A59CC]">₱{stats.dogCoins.toFixed(2)}</span>
+                              <span className="text-lg font-black text-[#6A59CC]">₱{(Number(stats?.dogCoins ?? 0)).toFixed(2)}</span>
                             </div>
                           </div>
                         </div>
@@ -1764,7 +1764,7 @@ function AppContent() {
                             </div>
                             <div className="flex justify-between items-center">
                               <span className="text-[10px] text-[#7F8C8D]">Revenue</span>
-                              <span className="text-lg font-black text-[#4ECDC4]">₱{stats.catCoins.toFixed(2)}</span>
+                              <span className="text-lg font-black text-[#4ECDC4]">₱{(Number(stats?.catCoins ?? 0)).toFixed(2)}</span>
                             </div>
                           </div>
                         </div>
