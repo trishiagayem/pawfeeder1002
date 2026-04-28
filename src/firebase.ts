@@ -2,14 +2,14 @@ import { initializeApp } from 'firebase/app';
 import { getAuth } from 'firebase/auth';
 import { getFirestore } from 'firebase/firestore';
 
-// ✅ FIX: Use ENV instead of JSON file
 const firebaseConfig = {
-  apiKey: import.meta.env.VITE_FIREBASE_API_KEY,
-  authDomain: import.meta.env.VITE_FIREBASE_AUTH_DOMAIN,
-  projectId: import.meta.env.VITE_FIREBASE_PROJECT_ID,
-  storageBucket: import.meta.env.VITE_FIREBASE_STORAGE_BUCKET,
-  messagingSenderId: import.meta.env.VITE_FIREBASE_MESSAGING_SENDER_ID,
-  appId: import.meta.env.VITE_FIREBASE_APP_ID,
+  apiKey: "AIzaSyANs-yCKbcq7HkXdvnhQRyeKEyp9LTSvd0",
+  authDomain: "pawfeeder1001.firebaseapp.com",
+  databaseURL: "https://pawfeeder1001-default-rtdb.asia-southeast1.firebasedatabase.app",
+  projectId: "pawfeeder1001",
+  storageBucket: "pawfeeder1001.firebasestorage.app",
+  messagingSenderId: "1012150186603",
+  appId: "1:1012150186603:web:e541bfc4d2a3cd017e772e"
 };
 
 // Initialize Firebase
