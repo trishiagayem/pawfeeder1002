@@ -27,7 +27,16 @@ L.Marker.prototype.options.icon = DefaultIcon;
 const RecenterMap = ({ lat, lng }: { lat: number; lng: number }) => {
   const map = useMap();
   useEffect(() => {
-    map.setView([lat, lng], map.getZoom());
+    if (!lat || !lng || isNaN(lat) || isNaN(lng)) return;
+const safeLat = Number(lat);
+const safeLng = Number(lng);
+
+if (isNaN(safeLat) || isNaN(safeLng)) {
+  console.log("Invalid map coords:", lat, lng);
+  return;
+}
+
+map.setView([safeLat, safeLng], map.getZoom());
   }, [lat, lng, map]);
   return null;
 };
